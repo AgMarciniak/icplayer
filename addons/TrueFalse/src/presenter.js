@@ -495,15 +495,22 @@ function AddonTrueFalse_create() {
     };
 
     presenter.getState = function () {
-        if (presenter.isShowAnswersActive) {
-            presenter.hideAnswers();
-        }
-
-        return JSON.stringify({
-            selectedElements: getSelectedElements(),
+        function getStateBase(selectedElements) {
+            return {
+            selectedElements: selectedElements,
             isVisible: presenter.isVisible,
             isDisabled: presenter.isDisabled
-        });
+            }
+        }
+
+        var state = {};
+        if (presenter.isShowAnswersActive) {
+            state = getStateBase(presenter.currentState); // This is saved on ShowAnswers
+        } else {
+            state = getStateBase(getSelectedElements());
+        }
+
+        return JSON.stringify(state);
     };
 
     presenter.setState = function (state) {
@@ -824,16 +831,21 @@ function AddonTrueFalse_create() {
         workMode(true);
 
         for (var i = 1; i < questions.length + 1; i++) {
-            var $row = presenter.$view.find('#' + i),
-                correctValues = (questions[i - 1].Answer).split(',');
+            var $row = presenter.$view.find('#' + i);
+            var correctValues = (questions[i - 1].Answer).split(',');
 
-            $row.find(".tf_" + presenter.type + "_image").addClass('disabled');
+            var trueFalseImages = $row.find(".tf_" + presenter.type + "_image");
+            trueFalseImages.addClass('disabled');
 
             for (var j = 0; j < correctValues.length; j++) {
-                var index = parseInt(correctValues[j], 10) + 1,
-                    $element = $row.find(".tf_" + presenter.type + "_image:nth-child(" + index + ")");
+                // empty string split by separator will return array with empty element
+                if (correctValues[j].length > 0) {
+                    var index = parseInt(correctValues[j], 10) + 1;
+                    var $element = $row.find(".tf_" + presenter.type + "_image:nth-child(" + index + ")");
 
-                $element.addClass('down correct-answer').removeClass('up');
+                    $element.addClass('down correct-answer');
+                    $element.removeClass('up');
+                }
             }
         }
     };

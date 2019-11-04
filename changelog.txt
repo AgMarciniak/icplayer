@@ -1,3 +1,41 @@
+2019-10-30 Fixed Slider working incorrectly when inside overflow: auto
+2019-10-29 Added Count Errors property to Text Coloring
+2019-10-29 Added clearing Catch addon objects on page change.
+2019-10-29 Fixed getting readable text in Text module
+2019-10-28 Fixed issues with scaling of multiplegap
+2019-10-24 When table is not activity or does not have gaps, then return true in isAttempted
+2019-10-24 Fixed problem with animation and transparency.
+2019-10-23 Fixed error in destroy method in IWB Toolbar module
+2019-10-18 Fixed styles in Flash Cards module
+2019-10-17 Fix problem with hideAnswers in getScore, getErrorCount, getState in multiple gap addon
+2019-10-16 TrueFalse is not hidding show answers during getState
+2019-10-16 Remove hideAnswers from getState in ordering module.
+2019-10-14 Optimize drawing frames in Animation addon
+2019-10-11 Added isAttempted command to Table.
+2019-10-10 Added TTS support to Slider
+2019-10-10 Fix for moveToFrame command in Image Vierwer not calling tts
+2019-10-09 Added destroy method and fixed getting state in Slideshow module
+2019-10-09 Add destroy lifecycle management for modules. Use destroy in IWB addon. Fix problem with DropDown gap and disable. Remove hideAnswers from getState in Text module.
+2019-10-07 Fix Coloring issue when the first layer is not default
+2019-10-07 Fixed issues on Edge and mlibro
+2019-10-03 Fixed TTS reading Image Viewer alt text after entering a page
+2019-09-27 Fix ImageViewerPublic model upgrade.
+2019-09-26 Fixed disabling Image Gap module
+2019-09-23 Added TTS support to Image Viewer
+2019-09-17 Added a new text property for controlling how gap size attribute is calculated
+2019-09-17 Added TTS support to the Animation addon
+2019-09-13 Fixed TrueFalse showAnswers method when correct answers are empty.
+2019-09-11 Added handling of online video files when offline
+2019-09-10 Fixed getState breaking Swiffy Animation addon
+2019-09-05 Added loading CSS styles to Editable Window
+2019-09-04 Fixed IWB Toolbar zoom working incorrectly in iframe
+2019-09-02 Fixed problem with fullscreen in iframe addon
+2019-08-26 Added getter for Content metadata. Added SCORM passed/failed statuses.
+2019-08-20 Added alt text support to text identification
+2019-08-12 Fixed problem with editable window with audio on IE, EDGE, FIREFOX
+2019-07-31 Blocked the download audio in Editable Window module
+2019-07-26 Fixed scrolling while dragging the Slider on mobile devices
+2019-07-26 Fixed issue with the values of newly added properties being overwritten
 2019-07-26 Fixed opacity in Editable Window module
 2019-07-22 Removed the ability to download the video in editable window
 2019-07-19 Added supporting of only audio to Editable Window

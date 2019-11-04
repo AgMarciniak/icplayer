@@ -2485,8 +2485,16 @@ function AddonIWB_Toolbar_create() {
             presenter.changeCursor('zoom-in');
         } else {
             presenter.$panel.hide();
+            var topWindowHeight = 0;
+            var iframeTopOffset = 0;
+            if (window.iframeSize) {
+                topWindowHeight = window.iframeSize.windowInnerHeight;
+                iframeTopOffset = window.iframeSize.offsetTop - window.iframeSize.frameOffset;
+            }
             zoom.to({
-                element: selectedModule
+                element: selectedModule,
+                topWindowHeight: topWindowHeight,
+                iframeTopOffset: iframeTopOffset
             });
             $(selectedModule).addClass('zoomed');
             presenter.changeCursor('zoom-out');
@@ -2847,16 +2855,13 @@ function AddonIWB_Toolbar_create() {
         }
 
         presenter._view = view;
-        view.addEventListener('DOMNodeRemoved', presenter.destroy);
 
         presenter.updateZoomConfiguration();
     };
 
-    presenter.destroy = function (event) {
-        if (event.target !== presenter._view) {
-            return;
-        }
-        
+    presenter.onDestroy = function () {
+        clearCanvases();
+
         presenter.points = [];
         presenter.points = null;
         presenter.mouse = null;
@@ -2870,10 +2875,12 @@ function AddonIWB_Toolbar_create() {
         presenter.$pagePanel.find('.note').off();
 
         //noteObjects
-        presenter.noteObjects.forEach(function (note) {
-            note.destroy();
-            note = null;
-        });
+        if(presenter.noteObjects) {
+            presenter.noteObjects.forEach(function (note) {
+                note.destroy();
+                note = null;
+            });
+        }
         presenter.noteObjects = [];
         presenter.noteObjects = null;
 
@@ -3069,7 +3076,6 @@ function AddonIWB_Toolbar_create() {
          * setBasicConfiguration
          * *******************************************************************
          */
-        presenter._view.removeEventListener('DOMNodeRemoved', presenter.destroy);
         presenter.$removeConfirmationBox.off();
         presenter.$removeConfirmationBoxClock.off();
         presenter.$removeConfirmationBoxStopwatch.off();
@@ -3131,29 +3137,46 @@ function AddonIWB_Toolbar_create() {
          */
         presenter.$floatingImageMask.off();
 
-        presenter.floatingImageLayer.destroy();
-        presenter.floatingImageStage.destroy();
+        if(presenter.floatingImageLayer) {
+            presenter.floatingImageLayer.destroy();
+        }
+        if(presenter.floatingImageStage) {
+            presenter.floatingImageStage.destroy();
+        }
         
         for(var i = 0; i < 3; i++) {
-            presenter._kinetic.images[i].destroy();
+            if(presenter._kinetic.images[i]) {
+                presenter._kinetic.images[i].destroy();
+            }
         
             //imageRotateObj
-            $(presenter._kinetic.rotateObj[i]).off();
-            presenter._kinetic.rotateObj[i].src='';
+            if(presenter._kinetic.rotateObj[i]) {
+                $(presenter._kinetic.rotateObj[i]).off();
+                presenter._kinetic.rotateObj[i].src = '';
+            }
         
             //imageMoveObj
-            $(presenter._kinetic.moveObj[i]).off();
-            presenter._kinetic.moveObj[i].src ='';
+            if(presenter._kinetic.moveObj[i]) {
+                $(presenter._kinetic.moveObj[i]).off();
+                presenter._kinetic.moveObj[i].src = '';
+            }
         
         
             //imageObj
-            $(presenter._kinetic.imageObj[i]).off();
-            presenter._kinetic.imageObj[i].src='';
-        
-        
-            presenter._kinetic.rotateIcon[i].destroy();
-            presenter._kinetic.moveIcon[i].destroy();
-            presenter.floatingImageGroups[i].destroy();
+            if(presenter._kinetic.imageObj[i]) {
+                $(presenter._kinetic.imageObj[i]).off();
+                presenter._kinetic.imageObj[i].src = '';
+            }
+
+            if(presenter._kinetic.rotateIcon[i]) {
+                presenter._kinetic.rotateIcon[i].destroy();
+            }
+            if(presenter._kinetic.moveIcon[i]) {
+                presenter._kinetic.moveIcon[i].destroy();
+            }
+            if(presenter.floatingImageGroups[i]) {
+                presenter.floatingImageGroups[i].destroy();
+            }
         }
 
         presenter._kinetic.images = [];
@@ -3204,7 +3227,9 @@ function AddonIWB_Toolbar_create() {
          * zoom
          * ************************************************ 
          */
-        zoom.destroy();
+        if(zoom) {
+            zoom.destroy();
+        }
 
         /***
          *************************************************
@@ -3475,7 +3500,6 @@ function AddonIWB_Toolbar_create() {
                'marker' : (presenter.markerUsed && presenter.markerCanvas) ? presenter.markerDataUrl : null
            };
 
-        clearCanvases();
 
         var stateColor;
         var stateThickness;
@@ -3801,3 +3825,7 @@ function AddonIWB_Toolbar_create() {
 
     return presenter;
 }
+
+AddonIWB_Toolbar_create.__supported_player_options__ = {
+    interfaceVersion: 2
+};
